@@ -34,7 +34,7 @@ local sampleSize = {1, opt.loadSize}
 local function loadImage(path)
    local input = image.load(path, 1, 'float')
    -- find the smaller dimension, and resize it to loadSize[2] (while keeping aspect ratio)
-   input=image.scale(input,loadSize[2],loadSize[2])
+ --  input=image.scale(input,loadSize[2],loadSize[2])
 
    return input
 end
