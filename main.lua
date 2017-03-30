@@ -175,7 +175,7 @@ local fDx = function(x)
    elseif opt.noise == 'normal' then
        noise:normal(0, 1)
    end
-   local fake = netG:forward(noise)
+   fake = netG:forward(noise)
    input:copy(fake)
    label:fill(fake_label)
 
