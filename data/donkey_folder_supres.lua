@@ -32,7 +32,7 @@ local loadSize   = {1, opt.loadSize}
 local sampleSize = {1, opt.loadSize}
 
 local function loadImage(path)
-   local input = image.load(path, 3, 'float')
+   local input = image.load(path, 1, 'float')
    -- find the smaller dimension, and resize it to loadSize[2] (while keeping aspect ratio)
    input=image.scale(input,loadSize[2],loadSize[2])
 
@@ -48,12 +48,11 @@ local mean,std
 local trainHook = function(self, path)
    collectgarbage()
    local input = loadImage(path)
-   local input_y=image.rgb2y(input)
+   local input2=image.scale(input,opt.loadSize/4,opt.loadSize/4,'bicubic')
    
-   input=image.scale(input,opt.loadSize/4,opt.loadSize/4,'bicubic')
-   local input_y2=image.rgb2y(input)
-  
-   return input_y,input_y2
+   input:mul(2):add(-1)
+   input2:mul(2):add(-1)
+   return input,input_y2
 end
 
 --------------------------------------
