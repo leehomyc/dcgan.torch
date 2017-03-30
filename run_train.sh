@@ -1,1 +1,1 @@
-t_folder=/media/harryyang/New\ Volume/vision-harry/ILSVRC2015/Data/CLS-LOC/train model_folder=/media/harryyang/New\ Volume/models/super_resolution/ th run_sr.lua 
+t_folder=/media/haryyang/New Volume/vision-harry/benchmark_RELEASE/Contour_Train th main.lua 
