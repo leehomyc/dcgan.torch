@@ -155,6 +155,8 @@ local fDx = function(x)
    -- train with real
    data_tm:reset(); data_tm:resume()
    local real,tmp = data:getBatch()
+   print(real[1]:max())
+   print(real[1]:min())
    data_tm:stop()
    input:copy(real)
    label:fill(real_label)
@@ -223,6 +225,18 @@ for epoch = 1, opt.niter do
           disp.image(fake, {win=opt.display_id, title=opt.name})
           disp.image(real, {win=opt.display_id * 3, title=opt.name})
       end
+
+      if counter % 10 == 0 then
+          test:copy(real_uncropped[1])
+          image.save('result/'..opt.name..counter..'_real.png',real_rgb)
+          test2:copy(input[1])
+          image.save('result/'..opt.name..counter..'_input.png',test2)
+          fake[fake:gt(1)]=1
+          fake[fake:lt(0)]=0
+          test:copy(fake[1])
+          image.save('result/'..opt.name..counter..'_fake.png',test)
+      end
+
 
       -- logging
       if ((i-1) / opt.batchSize) % 1 == 0 then
