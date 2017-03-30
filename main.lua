@@ -167,8 +167,6 @@ local fDx = function(x)
    real,tmp = data:getBatch()
    data_tm:stop()
    input:copy(real)
-   print(input[1]:max())
-   print(input[1]:min())
    label:fill(real_label)
 
    local output = netD:forward(input)
@@ -215,10 +213,11 @@ local fGx = function(x)
    return errG, gradParametersG
 end
 
--- train
+-- train 
+local counter = 0
 for epoch = 1, opt.niter do
    epoch_tm:reset()
-   local counter = 0
+  
    for i = 1, math.min(data:size(), opt.ntrain), opt.batchSize do
       tm:reset()
       -- (1) Update D network: maximize log(D(x)) + log(1 - D(G(z)))
@@ -240,8 +239,6 @@ for epoch = 1, opt.niter do
           id=counter%100
           test:copy(real[1])
           test=(test+1)/2
-          print(test:max())
-          print(test:min())
           image.save('result/'..opt.name..id..'_real.png',test)
           test:copy(fake[1])
            test=(test+1)/2
