@@ -49,7 +49,7 @@ local function weights_init(m)
    end
 end
 
-local nc = 3
+local nc = 1
 local nz = opt.nz
 local ndf = opt.ndf
 local ngf = opt.ngf
