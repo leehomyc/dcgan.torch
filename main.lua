@@ -164,7 +164,7 @@ local fDx = function(x)
 
    -- train with real
    data_tm:reset(); data_tm:resume()
-   local real,tmp = data:getBatch()
+   real,tmp = data:getBatch()
    data_tm:stop()
    input:copy(real)
    print(input[1]:max())
@@ -238,7 +238,7 @@ for epoch = 1, opt.niter do
 
       if counter % 10 == 0 then
           id=counter%100
-          test:copy(input[1])
+          test:copy(real[1])
           test=(test+1)/2
           print(test:max())
           print(test:min())
