@@ -52,7 +52,7 @@ local trainHook = function(self, path)
    
    input:mul(2):add(-1)
    input2:mul(2):add(-1)
-   return input,input_y2
+   return input,input2
 end
 
 --------------------------------------
