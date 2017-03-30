@@ -239,8 +239,10 @@ for epoch = 1, opt.niter do
       if counter % 10 == 0 then
           id=counter%100
           test:copy(input[1])
+          test=(test+1)/2
           image.save('result/'..opt.name..id..'_real.png',test)
           test:copy(fake[1])
+           test=(test+1)/2
           image.save('result/'..opt.name..id..'_fake.png',test)
       end
 
