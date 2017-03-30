@@ -15,7 +15,6 @@ paths.dofile('dataset.lua')
 ------------------------------------------
 -------- COMMON CACHES and PATHSF
 -- Check for existence of opt.data
-print(opt)
 opt.data = os.getenv('DATA_ROOT') or opt.t_folder
 if not paths.dirp(opt.data) then
     print('Did not find directory: '..opt.data)

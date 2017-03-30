@@ -114,7 +114,7 @@ optimStateD = {
    beta1 = opt.beta1,
 }
 ----------------------------------------------------------------------------
-local input = torch.Tensor(opt.batchSize, 3, opt.loadSize, opt.loadSize)
+local input = torch.Tensor(opt.batchSize, 1, opt.loadSize, opt.loadSize)
 local noise = torch.Tensor(opt.batchSize, nz, 1, 1)
 local label = torch.Tensor(opt.batchSize)
 local errD, errG
