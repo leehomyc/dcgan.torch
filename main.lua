@@ -35,7 +35,7 @@ torch.setdefaulttensortype('torch.FloatTensor')
 
 -- create data loader
 local DataLoader = paths.dofile('data/data.lua')
-local data = DataLoader.new(opt.nThreads, opt.dataset, opt)
+data = DataLoader.new(opt.nThreads, opt)
 print("Dataset: " .. opt.dataset, " Size: ", data:size())
 ----------------------------------------------------------------------------
 local function weights_init(m)
