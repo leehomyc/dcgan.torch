@@ -121,6 +121,7 @@ local errD, errG
 local epoch_tm = torch.Timer()
 local tm = torch.Timer()
 local data_tm = torch.Timer()
+local test = torch.Tensor(1, opt.loadSize, opt.loadSize)
 ----------------------------------------------------------------------------
 if opt.gpu > 0 then
    require 'cunn'
@@ -227,12 +228,8 @@ for epoch = 1, opt.niter do
       end
 
       if counter % 10 == 0 then
-          test:copy(real_uncropped[1])
-          image.save('result/'..opt.name..counter..'_real.png',real_rgb)
-          test2:copy(input[1])
-          image.save('result/'..opt.name..counter..'_input.png',test2)
-          fake[fake:gt(1)]=1
-          fake[fake:lt(0)]=0
+          test:copy(real[1])
+          image.save('result/'..opt.name..counter..'_real.png',test)
           test:copy(fake[1])
           image.save('result/'..opt.name..counter..'_fake.png',test)
       end
