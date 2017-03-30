@@ -5,7 +5,7 @@ require 'optim'
 opt = {
    dataset = 'folder',       -- imagenet / lsun / folder
    batchSize = 64,
-   loadSize = 96,
+   loadSize = 64,
    nz = 100,               -- #  of dim for Z
    ngf = 64,               -- #  of gen filters in first conv layer
    ndf = 64,               -- #  of discrim filters in first conv layer
