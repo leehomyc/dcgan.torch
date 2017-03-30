@@ -6,7 +6,7 @@ local data = {}
 local result = {}
 local unpack = unpack and unpack or table.unpack
 
-function data.new(n, opt_)
+function data.new(n, dataset_name, opt_)
    opt_ = opt_ or {}
    local self = {}
    for k,v in pairs(data) do
@@ -14,8 +14,17 @@ function data.new(n, opt_)
    end
 
    local donkey_file
-   donkey_file = 'donkey_folder_supres.lua'
-   
+   if dataset_name == 'imagenet' or dataset_name == 'folder' then
+       donkey_file = 'donkey_folder.lua'
+   elseif dataset_name == 'rrrrr' then
+       donkey_file = 'donkey_rrrrr.lua'
+   elseif dataset_name == 'lsun' then
+       donkey_file = 'donkey_lsun.lua'
+       if n > 6 then n = 6 end -- lmdb complains beyond 6 donkeys. wtf.
+   else
+      error('Unknown dataset: ' .. dataset_name)
+   end
+
    if n > 0 then
       local options = opt_
       self.threads = Threads(n,

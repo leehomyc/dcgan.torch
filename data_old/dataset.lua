@@ -107,21 +107,15 @@ function dataset:__init(...)
          classPaths[k] = {}
       end
    end
-  -- print('number of classes'..#self.classes)
-
    local function tableFind(t, o) for k,v in pairs(t) do if v == o then return k end end end
    -- loop over each paths folder, get list of unique class names,
    -- also store the directory paths per class
    -- for each class,
-
-
    for k,path in ipairs(self.paths) do
       local dirs = dir.getdirectories(path);
-      
       for k,dirpath in ipairs(dirs) do
          local class = paths.basename(dirpath)
          local idx = tableFind(self.classes, class)
-         print('class '..class)
          if not idx then
             table.insert(self.classes, class)
             idx = #self.classes
@@ -141,8 +135,8 @@ function dataset:__init(...)
    -- define command-line tools, try your best to maintain OSX compatibility
    local wc = 'wc'
    local cut = 'cut'
-   local find = 'find'
-   if jit.os == 'OSX' then
+   local find = 'find -L' -- -L is necessary when the subfolders themselves are symlinks
+   if ffi.os == 'OSX' then
       wc = 'gwc'
       cut = 'gcut'
       find = 'gfind'
@@ -165,8 +159,6 @@ function dataset:__init(...)
          .. ' those filenames into a single file containing all image paths for a given class')
    -- so, generates one file per class
    local classFindFiles = {}
-
-   --print('number of classes'..#self.classes)
    for i=1,#self.classes do
       classFindFiles[i] = os.tmpname()
    end
@@ -229,7 +221,6 @@ function dataset:__init(...)
    local runningIndex = 0
    for i=1,#self.classes do
       if self.verbose then xlua.progress(i, #(self.classes)) end
-      print(classFindFiles[i])
       local length = tonumber(sys.fexecute(wc .. " -l '"
                                               .. classFindFiles[i] .. "' |"
                                               .. cut .. " -f1 -d' '"))
@@ -326,38 +317,33 @@ function dataset:getByClass(class)
 end
 
 -- converts a table of samples (and corresponding labels) to a clean tensor
-local function tableToOutput(self, dataTable, dataTable2,scalarTable)
-   local data, scalarLabels, labels, data2
+local function tableToOutput(self, dataTable, scalarTable)
+   local data, scalarLabels, labels
    local quantity = #scalarTable
    assert(dataTable[1]:dim() == 3)
    data = torch.Tensor(quantity,
 		       self.sampleSize[1], self.sampleSize[2], self.sampleSize[3])
-   data2 = torch.Tensor(quantity,
-           self.sampleSize[1], self.sampleSize[2]/4, self.sampleSize[3]/4)
    scalarLabels = torch.LongTensor(quantity):fill(-1111)
    for i=1,#dataTable do
       data[i]:copy(dataTable[i])
-      data2[i]:copy(dataTable2[i])
       scalarLabels[i] = scalarTable[i]
    end
-   return data, data2,scalarLabels
+   return data, scalarLabels
 end
 
 -- sampler, samples from the training set.
 function dataset:sample(quantity)
    assert(quantity)
    local dataTable = {}
-   local dataTable2={}
    local scalarTable = {}
    for i=1,quantity do
       local class = torch.random(1, #self.classes)
-      local out,out2 = self:getByClass(class)
+      local out = self:getByClass(class)
       table.insert(dataTable, out)
-      table.insert(dataTable2,out2)
       table.insert(scalarTable, class)
    end
-   local data, data2, scalarLabels = tableToOutput(self, dataTable, dataTable2, scalarTable)
-   return data, data2, scalarLabels
+   local data, scalarLabels = tableToOutput(self, dataTable, scalarTable)
+   return data, scalarLabels
 end
 
 function dataset:get(i1, i2)

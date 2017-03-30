@@ -3,10 +3,9 @@ require 'nn'
 require 'optim'
 
 opt = {
-   dataset = 'lsun',       -- imagenet / lsun / folder
+   dataset = 'folder',       -- imagenet / lsun / folder
    batchSize = 64,
    loadSize = 96,
-   fineSize = 64,
    nz = 100,               -- #  of dim for Z
    ngf = 64,               -- #  of gen filters in first conv layer
    ndf = 64,               -- #  of discrim filters in first conv layer
@@ -15,7 +14,7 @@ opt = {
    lr = 0.0002,            -- initial learning rate for adam
    beta1 = 0.5,            -- momentum term of adam
    ntrain = math.huge,     -- #  of examples per epoch. math.huge for full dataset
-   display = 1,            -- display samples while training. 0 = false
+   display = 0,            -- display samples while training. 0 = false
    display_id = 10,        -- display window id.
    gpu = 1,                -- gpu = 0 is CPU mode. gpu=X is GPU mode on GPU X
    name = 'experiment1',
@@ -114,7 +113,7 @@ optimStateD = {
    beta1 = opt.beta1,
 }
 ----------------------------------------------------------------------------
-local input = torch.Tensor(opt.batchSize, 3, opt.fineSize, opt.fineSize)
+local input = torch.Tensor(opt.batchSize, 3, opt.loadSize, opt.loadSize)
 local noise = torch.Tensor(opt.batchSize, nz, 1, 1)
 local label = torch.Tensor(opt.batchSize)
 local errD, errG
@@ -154,7 +153,7 @@ local fDx = function(x)
 
    -- train with real
    data_tm:reset(); data_tm:resume()
-   local real = data:getBatch()
+   local real,tmp = data:getBatch()
    data_tm:stop()
    input:copy(real)
    label:fill(real_label)
@@ -219,7 +218,7 @@ for epoch = 1, opt.niter do
       counter = counter + 1
       if counter % 10 == 0 and opt.display then
           local fake = netG:forward(noise_vis)
-          local real = data:getBatch()
+          local real,tmp = data:getBatch()
           disp.image(fake, {win=opt.display_id, title=opt.name})
           disp.image(real, {win=opt.display_id * 3, title=opt.name})
       end
