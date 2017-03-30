@@ -1,6 +1,7 @@
 require 'torch'
 require 'nn'
 require 'optim'
+require 'image'
 
 opt = {
    dataset = 'folder',       -- imagenet / lsun / folder
@@ -27,6 +28,7 @@ for k,v in pairs(opt) do opt[k] = tonumber(os.getenv(k)) or os.getenv(k) or opt[
 print(opt)
 if opt.display == 0 then opt.display = false end
 
+paths.mkdir('result')
 opt.manualSeed = torch.random(1, 10000) -- fix seed
 print("Random Seed: " .. opt.manualSeed)
 torch.manualSeed(opt.manualSeed)
